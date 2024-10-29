@@ -1,40 +1,21 @@
-const nums = document.querySelectorAll('.nums span')
-const counter = document.querySelector('.counter')
-const finalMessage = document.querySelector('.final')
-const replay = document.querySelector('#replay')
+const counters = document.querySelectorAll('.counter')
 
-runAnimation()
+counters.forEach(counter => {
+    counter.innerText = '0'
 
-function resetDOM() {
-  counter.classList.remove('hide')
-  finalMessage.classList.remove('show')
+    const updateCounter = () => {
+        const target = +counter.getAttribute('data-target')
+        const c = +counter.innerText
 
-  nums.forEach((num) => {
-    num.classList.value = ''
-  })
+        const increment = target / 200
 
-  nums[0].classList.add('in')
-}
+        if(c < target) {
+            counter.innerText = `${Math.ceil(c + increment)}`
+            setTimeout(updateCounter, 1)
+        } else {
+            counter.innerText = target
+        }
+    }
 
-function runAnimation() {
-  nums.forEach((num, idx) => {
-    const nextToLast = nums.length - 1
-
-    num.addEventListener('animationend', (e) => {
-      if (e.animationName === 'goIn' && idx !== nextToLast) {
-        num.classList.remove('in')
-        num.classList.add('out')
-      } else if (e.animationName === 'goOut' && num.nextElementSibling) {
-        num.nextElementSibling.classList.add('in')
-      } else {
-        counter.classList.add('hide')
-        finalMessage.classList.add('show')
-      }
-    })
-  })
-}
-
-replay.addEventListener('click', () => {
-  resetDOM()
-  runAnimation()
+    updateCounter()
 })
